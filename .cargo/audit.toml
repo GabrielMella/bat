@@ -1,2 +1,25 @@
 [advisories]
-ignore = ["RUSTSEC-2024-0320", "RUSTSEC-2024-0421"]
+# Each suppressed advisory must be re-evaluated when a non-vulnerable version of
+# the affected crate is released; remove the entry as soon as an upgrade is
+# possible.
+ignore = [
+  # yaml-rust 0.4.5 – unmaintained (RUSTSEC-2024-0320).
+  # Pulled in transitively by syntect 5.3.0 via the `yaml-load` feature, which is
+  # enabled by bat's `build-assets` feature (part of the `application` feature,
+  # included in the default feature set).  yaml-rust is used by syntect to parse
+  # .sublime-syntax files when building compiled assets; bat itself does not call
+  # yaml-rust directly.  The advisory is informational (unmaintained crate only;
+  # no known exploitable vulnerability).  The vulnerable code path is reachable
+  # when the `build-assets` feature is active but bat does not expose yaml-rust
+  # APIs to untrusted input.
+  # Remove this entry once syntect migrates away from yaml-rust.
+  # Upstream tracking: https://github.com/sharkdp/bat/issues/3861
+  "RUSTSEC-2024-0320",
+
+  # linked-hash-map 0.5.6 – unmaintained (RUSTSEC-2024-0421).
+  # Pulled in transitively by yaml-rust 0.4.5 (see above); no known exploitable
+  # vulnerability.  The advisory is informational (unmaintained crate only).
+  # Remove this entry once yaml-rust is no longer a transitive dependency.
+  # Upstream tracking: https://github.com/sharkdp/bat/issues/3861
+  "RUSTSEC-2024-0421",
+]
