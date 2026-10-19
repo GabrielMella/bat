@@ -1,2 +1,17 @@
 [advisories]
-ignore = ["RUSTSEC-2024-0320", "RUSTSEC-2024-0421"]
+ignore = [
+    # RUSTSEC-2024-0320: yaml-rust 0.4.5 (unmaintained)
+    # Pulled in as a transitive dependency via syntect 5.3.0, bat's syntax-highlighting library.
+    # bat uses yaml-rust only through syntect's internal YAML parsing of .sublime-syntax files
+    # at asset-build and cache-load time; no user-supplied YAML is parsed, so the unmaintained
+    # code is not exposed to untrusted input.
+    # Suppressed until syntect upgrades to a maintained YAML parser; tracked in bat PR #3861.
+    "RUSTSEC-2024-0320",
+
+    # RUSTSEC-2024-0421: linked-hash-map 0.5.6 (unmaintained)
+    # Pulled in as a transitive dependency via yaml-rust -> syntect 5.3.0 (see above).
+    # Reachability is identical to RUSTSEC-2024-0320: only exercised during internal
+    # .sublime-syntax parsing, not on any user-controlled data path.
+    # Suppressed until the yaml-rust/linked-hash-map dependency chain is updated; tracked in bat PR #3861.
+    "RUSTSEC-2024-0421",
+]
